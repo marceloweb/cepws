@@ -8,7 +8,7 @@ import requests, json
 
 app = Flask(__name__)
 
-@app.route('/cepws/api/v1.0/tasks/<string:task_id>', methods=['GET'])
+@app.route('/cep/<string:task_id>', methods=['GET'])
 def get_task(task_id):
     r = requests.get('http://api.postmon.com.br/v1/cep/' + task_id)
     return app.response_class(r.content, content_type='application/json')

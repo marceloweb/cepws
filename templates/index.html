@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Onix App</title>
+    <title>MarceloWeb App</title>
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
     <style>
@@ -51,7 +51,7 @@
   	border-top-right-radius: 0;
 	}
 
-	#result, #danger {
+	#result, #danger, #loading {
 	display: none;
 	}
     </style>
@@ -69,6 +69,7 @@
         <button id="btnSearch" class="btn btn-lg btn-primary btn-block" type="button">Pesquisar</button>
       </form>
       </div>
+      <div id="loading">Pesquisando...</div>
       <div id="result" class="alert alert-success" role="alert">
       </div>
       <div id="danger" class="alert alert-danger" role="alert">
@@ -80,20 +81,23 @@
               
 	     $("#result").css("display","none");
 	     $("#danger").css("display","none");	  
+             $("#loading").css("display","block");
 
              $.ajax({
                 url: '/cep',
                 data: $('form').serialize(),
                 type: 'POST',
                 success: function(data) {
-		   $("#danger").css("display","none");	
+		   $("#danger").css("display","none");
+		   $("#loading").css("display","none");	
 		   $("#result").css("display","block");
                    $("#result").html(
 			   "<strong>Achamos! </strong>" + data.logradouro +', '+ data.cidade +'-'+ data.estado
 		   );
                 },
                 error: function(error) {
-		   $("#result").css("display","none");	
+		   $("#result").css("display","none");
+		   $("#loading").css("display","none");
 		   $("#danger").css("display","block");	
                    $("#danger").html(
 		   	"<strong>Desculpe!</strong> Não encontramos este cep."

@@ -10,7 +10,7 @@
   	  padding-bottom: 40px;
 	}
  
-	.form-signin {
+	.signin {
   	max-width: 330px;
 	padding: 15px;
   	margin: 0 auto;
@@ -50,20 +50,16 @@
   	border-top-left-radius: 0;
   	border-top-right-radius: 0;
 	}
+
+	#result, #danger {
+	display: none;
+	}
     </style>
   </head>
  
   <body>
  
     <div class="container">
-      <div class="header">
-        <nav>
-          <ul class="nav nav-pills pull-right">
-            <li role="presentation" ><a href="main">Home</a></li>
-          </ul>
-        </nav>
-        <h3 class="text-muted">Onix App</h3>
-      </div>
  
       <div class="jumbotron">
         <h1>Consulta Cep</h1>
@@ -73,23 +69,35 @@
         <button id="btnSearch" class="btn btn-lg btn-primary btn-block" type="button">Pesquisar</button>
       </form>
       </div>
-      <div id="result"></div>
+      <div id="result" class="alert alert-success" role="alert">
+      </div>
+      <div id="danger" class="alert alert-danger" role="alert">
+      </div>
        <script src=https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js></script>
        <script>
        $(document).ready(function () { 
           $('#btnSearch').click(function() {
- 
+              
+	     $("#result").css("display","none");
+	     $("#danger").css("display","none");	  
+
              $.ajax({
                 url: '/cep',
                 data: $('form').serialize(),
                 type: 'POST',
                 success: function(data) {
+		   $("#danger").css("display","none");	
+		   $("#result").css("display","block");
                    $("#result").html(
-			   data.logradouro +', '+ data.cidade +'-'+ data.estado
+			   "<strong>Achamos! </strong>" + data.logradouro +', '+ data.cidade +'-'+ data.estado
 		   );
                 },
                 error: function(error) {
-                   $("#result").html(error);
+		   $("#result").css("display","none");	
+		   $("#danger").css("display","block");	
+                   $("#danger").html(
+		   	"<strong>Desculpe!</strong> Não encontramos este cep."
+		   );
                 }
             });
          });
@@ -97,7 +105,7 @@
       </script>
  
       <footer class="footer">
-        <p>&copy; Onix App 2017</p>
+        <p>&copy; marceloweb.info. 2017</p>
       </footer>
  
     </div>

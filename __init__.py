@@ -28,6 +28,12 @@ def cep():
     r = requests.get('http://api.postmon.com.br/v1/cep/' + _cep)
     return app.response_class(r.content, content_type='application/json')
 
+@app.route('/rastreio', methods=['POST'])
+def rastreio():
+    _codigo = request.form['codigo']
+    r = requests.get('http://api.postmon.com.br/v1/rastreio/ect/' + _codigo)
+    return app.response_class(r.content, content_type='application/json')
+
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)

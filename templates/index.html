@@ -60,20 +60,29 @@
   <body>
  
     <div class="container">
- 
+      <div id="loading">Pesquisando...</div>
+      <div id="result" class="alert alert-success" role="alert">
+      </div>
+      <div id="danger" class="alert alert-danger" role="alert">
+      </div>
+
       <div class="jumbotron">
-        <h1>Consulta Cep</h1>
+        <h2>Consulta Cep</h2>
         <form class="form-signin">
         <input maxlength=8 type="name" name="cep" id="cep" class="form-control" placeholder="Digite um cep" required autofocus>
 	<br />
         <button id="btnSearch" class="btn btn-lg btn-primary btn-block" type="button">Pesquisar</button>
       </form>
       </div>
-      <div id="loading">Pesquisando...</div>
-      <div id="result" class="alert alert-success" role="alert">
+      <div class="jumbotron">
+        <h2>Rastrear Objeto</h2>
+        <form class="form-signin">
+        <input maxlength=13 type="name" name="codigo" id="codigo" class="form-control" placeholder="Digite um código de rastreio" required autofocus>
+        <br />
+        <button id="btnCode" class="btn btn-lg btn-primary btn-block" type="button">Pesquisar</button>
+      </form>
       </div>
-      <div id="danger" class="alert alert-danger" role="alert">
-      </div>
+
        <script src=https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js></script>
        <script>
        $(document).ready(function () { 
@@ -105,6 +114,37 @@
                 }
             });
          });
+
+	 $('#btnCode').click(function() {
+              
+             $("#result").css("display","none");
+             $("#danger").css("display","none");          
+             $("#loading").css("display","block");
+             var result = "";
+             $.ajax({
+                url: '/rastreio',
+                data: $('form').serialize(),
+                type: 'POST',
+                success: function(data) {
+                   $("#danger").css("display","none");
+                   $("#loading").css("display","none"); 
+                   $("#result").css("display","block");
+		   result += "<strong>Achamos! </strong>";
+		   jQuery.each(data.historico, function() {
+			   result += "<p>" + this.local + "<br />" + this.data + "<br />" + this.situacao + "<p/>";
+		   });	
+                   $("#result").html(result);
+                },
+                error: function(error) {
+                   $("#result").css("display","none");
+                   $("#loading").css("display","none");
+                   $("#danger").css("display","block"); 
+                   $("#danger").html(
+                        "<strong>Desculpe!</strong> Nenhuma informação sobre este código."
+                   );
+                }
+            });
+         });      
       });
       </script>
  
